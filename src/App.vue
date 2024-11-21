@@ -1,85 +1,86 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+  import { onMounted, onBeforeUnmount } from 'vue';
+  import { RouterView, useRouter } from 'vue-router'
+  import { useStore } from 'vuex';
+  const router = useRouter();
+  const store = useStore();
+
+  //登出
+  const logout = ()=>{
+    store.dispatch('logout');
+    router.push('/login');
+  };
+
+  //監聽視窗
+  //  const handleBeforeUnload = () => { 
+  //    store.dispatch('logout'); 
+  //  }; 
+  
+  // onMounted(() => { 
+  //   window.addEventListener('beforeunload', handleBeforeUnload); 
+  // }); 
+  
+  //  onBeforeUnmount(() => { 
+  //    window.removeEventListener('beforeunload', handleBeforeUnload); 
+  //  });
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="bi bi-bank"></i>&nbsp;BankLite</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/dashboard">帳戶總覽</a>
+            </li>  
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">收支事件</a>
+            </li> 
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">轉帳事件</a>
+            </li> 
+
+            <li class="nav-item">
+              <button class="nav-link" aria-current="page" @click="logout()">登出</button>
+            </li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
   </header>
-
-  <RouterView />
+  
+  <main class="bg-success p-2 text-dark bg-opacity-10">
+    <RouterView />
+  </main>
+  
+  <footer>
+    <p>BankLite-簡易記帳</p>
+  </footer>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+header { 
+  background-color: #107d64;
+  
+} 
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+main { 
+  flex: 1;
+  padding: 10px;
+} 
 
-nav {
-  width: 100%;
-  font-size: 12px;
+footer { 
+  background-color: #494949;
+  padding: 10px;
   text-align: center;
-  margin-top: 2rem;
+  color:white;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>
