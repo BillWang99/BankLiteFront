@@ -8,7 +8,7 @@
   //登出
   const logout = ()=>{
     store.dispatch('logout');
-    router.push('/login');
+    location.reload();
   };
 
   //監聽視窗
@@ -36,18 +36,26 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/dashboard">帳戶總覽</a>
+              <a class="nav-link active" aria-current="page" href="/">帳戶總覽</a>
             </li>  
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="#">收支事件</a>
+              <a class="nav-link" aria-current="page" href="/transaction">收支交易</a>
             </li> 
 
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="#">轉帳事件</a>
+              <a class="nav-link" aria-current="page" href="/transfer">轉帳交易</a>
             </li> 
 
             <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/accounttypes">帳戶類別</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/transactionhistory">交易紀錄</a>
+            </li>
+
+            <li class="nav-item" v-if="store.getters.isAuthenticated">
               <button class="nav-link" aria-current="page" @click="logout()">登出</button>
             </li> 
           </ul>
@@ -66,21 +74,21 @@
 </template>
 
 <style scoped>
-header { 
-  background-color: #107d64;
-  
-} 
+  header { 
+    background-color: #107d64;
+    
+  } 
 
-main { 
-  flex: 1;
-  padding: 10px;
-} 
+  main { 
+    flex: 1;
+    padding: 10px;
+  } 
 
-footer { 
-  background-color: #494949;
-  padding: 10px;
-  text-align: center;
-  color:white;
-}
+  footer { 
+    background-color: #494949;
+    padding: 10px;
+    text-align: center;
+    color:white;
+  }
 
 </style>

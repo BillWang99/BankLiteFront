@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from 'vuex'
-import HomeView from '../views/HomeView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,8 +8,8 @@ const router = createRouter({
 
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'dashboard',
+      component: () => import('../views/Dashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -18,10 +18,36 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path:'/dashboard',
-      name:'dashboard',
-      component: () => import('../views/Dashboard.vue'),
-      meta: { requiresAuth: true }
+      path:'/accounttypes',
+      name:'accounttypes',
+      component: () => import('../views/AccountTypes.vue'),
+      meta: {
+        requiresAuth:true
+      }
+    },
+    {
+      path:'/transaction',
+      name:'transaction',
+      component: ()=> import('../views/Transaction.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
+    {
+      path:'/transfer',
+      name:'transfer',
+      component: ()=> import('../views/Transfer.vue'),
+      meta:{
+        requiresAuth:true
+      }
+    },
+    {
+      path:'/transactionhistory',
+      name:'transactionhistory',
+      component : ()=> import('../views/TransactionHistory.vue'),
+      meta:{
+        requiresAuth:true,
+      }
     }
   ],
 });

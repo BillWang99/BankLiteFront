@@ -1,12 +1,14 @@
 <script setup>
-    import {computed, onMounted, ref} from 'vue';
+    import {ref} from 'vue';
     import axios from 'axios';
     import {useStore} from 'vuex';
     import { useRouter } from 'vue-router';
-    import Swal from 'sweetalert2'
+    import Swal from 'sweetalert2';
+    import { getCurrentInstance } from 'vue';
  
     const store = useStore();
     const router = useRouter();
+    const { proxy } = getCurrentInstance();
     
     //LoginForm
     const loginForm = {
@@ -33,7 +35,7 @@
         //檢查密碼長度
         if(isPasswordValid.value){
             try{
-                const response = await axios.post('http://banklite.com.tw/api/login', JSON.stringify(loginForm), {
+                const response = await axios.post(proxy.$loginApi, JSON.stringify(loginForm), {
                     headers:{
                         'Content-Type': 'application/json',
                     }
@@ -42,7 +44,7 @@
                 
                 //儲存資料
                 await store.dispatch('login', data);
-                router.push('/dashboard');
+                router.push('/');
             }catch(error){
                 Swal.fire({
                     title: error.response.data,

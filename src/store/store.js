@@ -39,6 +39,7 @@ const store = createStore({
   getters: {
     isAuthenticated: (state) => !!state.user.token,
     getUser: (state) => state.user,
+    getUserId(state) { return state.user.id; }
   },
 });
 

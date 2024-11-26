@@ -17,9 +17,10 @@ const app = createApp(App)
 //宣告api url
 app.config.globalProperties.$accountsApi = 'http://banklite.com.tw/api/Accounts';//Accounts
 app.config.globalProperties.$accountTypesApi = 'http://banklite.com.tw/api/AccountTypes';//AccountTypes
-app.config.globalProperties.$filesApi = 'http://banklite.com.tw/api/Files';//Files
+app.config.globalProperties.$filesApi = 'http://banklite.com.tw/api/Files/upload';//Files
 app.config.globalProperties.$loginApi = 'http://banklite.com.tw/api/login';//login
 app.config.globalProperties.$transactionsApi = 'http://banklite.com.tw/api/Transactions';//Transactions
+app.config.globalProperties.$transferApi = 'http://banklite.com.tw/api/Transactions/Transfer';//Transfer
 app.config.globalProperties.$usersApi = 'http://banklite.com.tw/api/Users';//Users
 
 if (process.env.NODE_ENV === 'production') { app.config.devtools = false; }
