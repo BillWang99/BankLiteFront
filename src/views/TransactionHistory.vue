@@ -71,7 +71,7 @@
     //預覽圖片(預設否)
     const isPreviewOpen = ref(false);
 
-    //
+    //圖片路徑
     const imageSrc = ref('');
 
     // 開啟預覽
@@ -84,6 +84,30 @@
     const closePreview = () => { 
         isPreviewOpen.value = false; 
     };
+
+    //匯出檔案
+    const exportFile = async(historyData) => {
+        try{
+            const response = await axios.post(proxy.$transactionsApi+'/export', JSON.stringify(historyData), {
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                responseType: 'blob',
+            });
+
+            if(response.status === 200){
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', '交易紀錄.docx'); // 指定下載文件的名稱和類型
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
 
     onMounted(()=>{
         fetchData();
@@ -125,72 +149,76 @@
         </div>
 
         <!--交易紀錄-->
-        <table class="table table-hover w-75 mx-auto mt-5" v-if="historyData">
-            <thead>
-                <tr>
-                    <th class="min-hide">日期</th>
-                    <th class="min-hide">帳戶</th>
-                    <th class="min-hide">交易方式</th>
-                    <th>事件</th>
-                    <th class="min-hide">金額</th>
-                    <th><i class="bi bi-search"></i></th>
-                </tr>
-            </thead>
+        <div class="w-75 mx-auto" v-if="historyData">
+            <button class="btn btn-secondary mt-4 "  @click="exportFile(historyData)">匯出檔案</button>
+            <table class="table table-hover  mx-auto mt-2" v-if="historyData">
+                <thead>
+                    <tr>
+                        <th class="min-hide">日期</th>
+                        <th class="min-hide">帳戶</th>
+                        <th class="min-hide">交易方式</th>
+                        <th>事件</th>
+                        <th class="min-hide">金額</th>
+                        <th><i class="bi bi-search"></i></th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr v-for="h in historyData" :key="h.Id">
-                    <td class="min-hide">{{ h.createTime }}</td>
-                    <td class="min-hide">{{ h.accountName }}</td>
-                    <td class="min-hide">{{ h.methodName}}</td>
-                    <td>{{ h.event }}</td>
-                    <td class="min-hide">{{ h.money }}</td>
-                    <td>
-                        <button class="btn btn-outline-success" 
-                         data-bs-toggle="modal" 
-                         data-bs-target="#transactionInfo"
-                         @click="gethistoryInfo(h.id)" 
-                        >
-                            <i class="bi bi-send"></i><span class="min-hide">查看</span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr v-for="h in historyData" :key="h.Id">
+                        <td class="min-hide">{{ h.createTime }}</td>
+                        <td class="min-hide">{{ h.accountName }}</td>
+                        <td class="min-hide">{{ h.methodName}}</td>
+                        <td>{{ h.event }}</td>
+                        <td class="min-hide">{{ h.money }}</td>
+                        <td>
+                            <button class="btn btn-outline-success" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#transactionInfo"
+                            @click="gethistoryInfo(h.id)" 
+                            >
+                                <i class="bi bi-send"></i><span class="min-hide">查看</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <!--交易明細-->
-        <div class="modal fade" id="transactionInfo" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">交易明細</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" v-if="historyInfo">
-                    <label>帳戶</label>
-                    <input type="text" class="form-control" v-model="historyInfo.accountName" readonly>
-                    <label>事件</label>
-                    <input type="text" class="form-control" v-model="historyInfo.event" readonly>
-                    <label>交易類型</label>
-                    <input type="text" class="form-control" v-model="historyInfo.methodName" readonly>
-                    <label>金額</label>
-                    <input type="text" class="form-control" v-model="historyInfo.money" readonly>
-                    <label>備註</label>
-                    <textarea class="form-control" v-model="historyInfo.note" readonly></textarea>
-                    <div class="row mt-3">
-                        <div class="col-sm-4" v-for="p in historyInfo.filesPath">
-                            <img :src="p" class="img-fluid" @click="openPreview(p)">
+            <!--交易明細-->
+            <div class="modal fade" id="transactionInfo" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">交易明細</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" v-if="historyInfo">
+                        <label>帳戶</label>
+                        <input type="text" class="form-control" v-model="historyInfo.accountName" readonly>
+                        <label>事件</label>
+                        <input type="text" class="form-control" v-model="historyInfo.event" readonly>
+                        <label>交易類型</label>
+                        <input type="text" class="form-control" v-model="historyInfo.methodName" readonly>
+                        <label>金額</label>
+                        <input type="text" class="form-control" v-model="historyInfo.money" readonly>
+                        <label>備註</label>
+                        <textarea class="form-control" v-model="historyInfo.note" readonly></textarea>
+                        <div class="row mt-3">
+                            <div class="col-sm-4" v-for="p in historyInfo.filesPath">
+                                <img :src="p" class="img-fluid" @click="openPreview(p)">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-body" v-else>
-                    <LoaderElement/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                </div>
+                    <div class="modal-body" v-else>
+                        <LoaderElement/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <div v-else>
