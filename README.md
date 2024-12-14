@@ -1,6 +1,8 @@
-# BankLiteFront
+# BankLite 簡易記帳  
+BankLite是一款簡易的記帳系統，其設計的目的為提供各式團體一個簡單且公開透明的記帳工具，
+使用者可以依需求建立帳戶類別與設定初始金額，日常交易、轉帳都可在系統內註記並匯出交易紀錄，
 
-This template should help get you started developing with Vue 3 in Vite.
+
 
 ## Recommended IDE Setup
 

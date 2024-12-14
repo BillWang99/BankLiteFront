@@ -116,7 +116,8 @@
             if(response.status === 200){
                 fetchData();
                 const myModalEl = document.getElementById('addType');
-                const modal = bootstrap.Modal.getInstance(myModalEl);                  
+                const modal = bootstrap.Modal.getInstance(myModalEl);
+                typeName.value = '';                  
                 modal.hide();
             }
         }catch(error){
